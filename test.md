@@ -2,6 +2,18 @@
 
 ### Connecting to GCP
 
+`gcloud sql connect wetube --user=root;`
+
+`show databases;`
+
+`use youtube_database;`
+
+`show tables;`
+
+<img width="817" alt="Screenshot 2024-04-08 at 6 30 16 AM" src="https://github.com/cs411-alawini/sp24-cs411-team110-wakeup/assets/109453350/080a637c-39b6-4320-87ea-8775c8bb3326">
+<img width="251" alt="Screenshot 2024-04-08 at 6 30 50 AM" src="https://github.com/cs411-alawini/sp24-cs411-team110-wakeup/assets/109453350/6380416b-8e41-45a8-8a8d-eb0bf807d92a">
+
+### DDL Commands
 ```sql
 CREATE TABLE Channel (
 channelID VARCHAR(255),
@@ -80,3 +92,67 @@ ON DELETE CASCADE
 ON UPDATE CASCADE
 );
 ```
+### Inserting Data (Proof of at least 1000 rows in at least 3 tables)
+<img width="313" alt="Screenshot 2024-04-08 at 6 32 18 AM" src="https://github.com/cs411-alawini/sp24-cs411-team110-wakeup/assets/109453350/58876b31-c038-4c5d-9341-da64c0909549">
+
+# Advanced Queries
+### Advanced Query 1
+- Advanced features: join multiple relations & aggregation via GROUP BY
+- Selects the top 15 channels with the most number of videos that have a title length of 100
+```sql
+SELECT c.channelTitle, COUNT(v.videoID) AS num_videos
+FROM Channel c JOIN Video v ON c.channelID = v.channelID
+WHERE LENGTH(v.title) = 100
+GROUP BY c.channelTitle
+ORDER BY num_videos DESC
+LIMIT 15;
+```
+Screenshot of the top 15 results:
+
+<img width="510" alt="Screenshot 2024-04-08 at 6 37 23 AM" src="https://github.com/cs411-alawini/sp24-cs411-team110-wakeup/assets/109453350/500c9af3-5d5b-4a5f-a773-3d919cdcea1c">
+
+### Advanced Query 2
+- Advanced features: join multiple relations & aggregation via GROUP BY
+- Selects the top 15 channels with trending videos under the most categories
+```sql
+SELECT ch.channelTitle, COUNT(DISTINCT ca.categoryID) AS category_count
+FROM Video v JOIN Channel ch ON ch.channelID = v.channelID
+JOIN Category ca ON ca.categoryID = v.categoryID
+GROUP BY v.channelID
+ORDER BY category_count DESC
+LIMIT 15;
+```
+<img width="623" alt="Screenshot 2024-04-08 at 6 40 59 AM" src="https://github.com/cs411-alawini/sp24-cs411-team110-wakeup/assets/109453350/2e047cda-f519-4297-b442-20cfe2ba864b">
+
+### Advanced Query 3
+- Advanced features: join multiple relations & subquery & aggregation via GROUP BY
+- For a particular category (in this screenshot, category 20 = “Gaming”), lists the top 15 channels who have posted the most videos under said category that have at least 1 million views and at most 1200 dislikes
+```sql
+SELECT channelTitle, videoCount
+FROM (SELECT DISTINCT ch.channelTitle, COUNT(ch.channelID) AS videoCount
+      FROM Video v JOIN Channel ch ON ch.channelID = v.channelID
+      JOIN VideoStats vs ON v.videoID = vs.videoID
+      WHERE v.categoryID = 20 AND vs.viewCount >= 1000000 AND vs.dislikes <= 1200
+      GROUP BY ch.channelTitle
+      HAVING videoCount > 1
+      ORDER BY videoCount DESC) sub_query
+GROUP BY channelTitle
+LIMIT 15;
+```
+<img width="697" alt="Screenshot 2024-04-08 at 6 44 31 AM" src="https://github.com/cs411-alawini/sp24-cs411-team110-wakeup/assets/109453350/98f3fc28-6e8c-4539-a798-f87058ffbd70">
+
+### Advanced Query 4
+- Advanced features: join multiple relations & SET operators (UNION)
+- Lists 10 videos in the “Sports” category that have at least 50000 likes and at least 1000 comments and 10 videos in the “Music” category that have at least 100000 likes and at least 5000 comments
+- ```sql
+  (SELECT v.title, vs.likes, vs.commentCount
+   FROM Video v JOIN VideoStats vs ON v.videoID = vs.videoID
+   WHERE v.categoryID = 17 AND vs.likes >= 50000 AND vs.commentCount >= 1000
+   LIMIT 10)
+  UNION
+  (SELECT v.title, vs.likes, vs.commentCount
+   FROM Video v JOIN VideoStats vs ON v.videoID = vs.videoID
+   WHERE v.categoryID = 10 AND vs.likes >= 100000 AND vs.commentCount >= 5000
+   LIMIT 10);
+  ```
+<img width="949" alt="Screenshot 2024-04-08 at 6 48 23 AM" src="https://github.com/cs411-alawini/sp24-cs411-team110-wakeup/assets/109453350/2b7758b9-84d4-4277-9d8e-c80e5c9716e0">
