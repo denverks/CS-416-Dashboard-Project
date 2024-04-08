@@ -156,3 +156,115 @@ LIMIT 15;
    LIMIT 10);
   ```
 <img width="949" alt="Screenshot 2024-04-08 at 6 48 23 AM" src="https://github.com/cs411-alawini/sp24-cs411-team110-wakeup/assets/109453350/2b7758b9-84d4-4277-9d8e-c80e5c9716e0">
+
+
+
+
+# Indexing Analysis
+### Query 1
+Analysis before indexing:
+<img width="1464" alt="Screenshot 2024-04-08 at 7 08 06 AM" src="https://github.com/cs411-alawini/sp24-cs411-team110-wakeup/assets/109453350/4893e79d-d406-45e3-b9e6-347510c78ec4">
+
+
+
+Attempt 1: `CREATE INDEX channelID_idx ON Video(channelID);`
+<img width="1461" alt="Screenshot 2024-04-08 at 7 16 12 AM" src="https://github.com/cs411-alawini/sp24-cs411-team110-wakeup/assets/109453350/d00e40e2-ca9c-44ec-89e8-994a86f7964f">
+
+
+
+
+Attempt 2: `CREATE INDEX title_idx ON Video(title);`
+<img width="1455" alt="Screenshot 2024-04-08 at 7 20 05 AM" src="https://github.com/cs411-alawini/sp24-cs411-team110-wakeup/assets/109453350/35d7fcba-94aa-488b-ac37-1175d8f84288">
+
+
+
+
+
+Attempt 3: `CREATE INDEX channel_title_idx ON Video(channelID, title);` MAY WANNA CHANGE THIS LATER
+<img width="1470" alt="Screenshot 2024-04-08 at 7 21 28 AM" src="https://github.com/cs411-alawini/sp24-cs411-team110-wakeup/assets/109453350/bfad6b6b-7dd7-4561-9e3c-9c3ba53d5d79">
+
+
+
+
+
+### Query 2
+Analysis before indexing:
+<img width="1460" alt="Screenshot 2024-04-08 at 7 25 15 AM" src="https://github.com/cs411-alawini/sp24-cs411-team110-wakeup/assets/109453350/041499cc-7d4d-424d-bf4d-a6f04cc921b5">
+
+
+
+
+Attempt 1: `CREATE INDEX channelID_idx ON Video(channelID);`
+<img width="1467" alt="Screenshot 2024-04-08 at 7 27 06 AM" src="https://github.com/cs411-alawini/sp24-cs411-team110-wakeup/assets/109453350/65d81b68-fa72-479d-bc86-6b98777665ad">
+
+
+
+
+
+Attempt 2: `CREATE INDEX categoryID_idx ON Video(CategoryID);`
+<img width="1468" alt="Screenshot 2024-04-08 at 7 29 16 AM" src="https://github.com/cs411-alawini/sp24-cs411-team110-wakeup/assets/109453350/caefbff0-b083-4503-a17e-244501e25288">
+
+
+
+
+
+
+
+Attempt 3: `CREATE INDEX channel_category_idx ON Video(channelID, categoryID);`
+<img width="1458" alt="Screenshot 2024-04-08 at 7 39 36 AM" src="https://github.com/cs411-alawini/sp24-cs411-team110-wakeup/assets/109453350/b2d7bd93-ae30-48ea-bd76-ccb84b75dbf2">
+
+
+
+
+### Query 3
+Analysis before indexing:
+<img width="1458" alt="Screenshot 2024-04-08 at 7 45 10 AM" src="https://github.com/cs411-alawini/sp24-cs411-team110-wakeup/assets/109453350/981643c7-9450-4660-8d00-c321be7ebeee">
+
+
+
+
+Attempt 1: `CREATE INDEX viewCount_idx ON VideoStats(viewCount);`
+<img width="1467" alt="Screenshot 2024-04-08 at 7 47 16 AM" src="https://github.com/cs411-alawini/sp24-cs411-team110-wakeup/assets/109453350/8daf51c0-dfcd-4aa7-9f8b-e11fde8ff513">
+
+
+
+
+
+Attempt 2: `CREATE INDEX dislikes_idx ON VideoStats(dislikes);`
+<img width="1470" alt="Screenshot 2024-04-08 at 7 48 34 AM" src="https://github.com/cs411-alawini/sp24-cs411-team110-wakeup/assets/109453350/ab857933-35fc-4bb3-84c4-4681ae877eeb">
+
+
+
+
+
+
+
+Attempt 3: `CREATE INDEX viewCount_dislikes_idx ON VideoStats(viewCount, dislikes);`
+<img width="1470" alt="Screenshot 2024-04-08 at 7 50 13 AM" src="https://github.com/cs411-alawini/sp24-cs411-team110-wakeup/assets/109453350/621411b3-5dac-4fa1-9194-e4c8c647b610">
+
+
+
+
+
+
+### Query 4
+Analysis before indexing:
+<img width="1461" alt="Screenshot 2024-04-08 at 7 53 21 AM" src="https://github.com/cs411-alawini/sp24-cs411-team110-wakeup/assets/109453350/b536711e-9800-4b38-8ffc-f92df73b3661">
+
+
+
+
+Attempt 1: `CREATE INDEX likes_idx ON VideoStats(likes);`
+<img width="1465" alt="Screenshot 2024-04-08 at 7 54 40 AM" src="https://github.com/cs411-alawini/sp24-cs411-team110-wakeup/assets/109453350/31be199d-5278-4bed-af6b-2fad17be002d">
+
+
+
+
+Attempt 2: `CREATE INDEX commentCount_idx ON VideoStats(commentCount);`
+<img width="1470" alt="Screenshot 2024-04-08 at 7 55 59 AM" src="https://github.com/cs411-alawini/sp24-cs411-team110-wakeup/assets/109453350/dd450b71-276a-4a2b-ba9c-1113e931d31c">
+
+
+
+Attempt 3: `CREATE INDEX likes_commentCount_idx ON VideoStats(likes, commentCount);`
+<img width="1469" alt="Screenshot 2024-04-08 at 7 57 14 AM" src="https://github.com/cs411-alawini/sp24-cs411-team110-wakeup/assets/109453350/72da8bfe-9547-4bdd-be0c-91eff5a75d56">
+
