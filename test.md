@@ -144,17 +144,17 @@ LIMIT 15;
 ### Advanced Query 4
 - Advanced features: join multiple relations & SET operators (UNION)
 - Lists 10 videos in the “Sports” category that have at least 50000 likes and at least 1000 comments and 10 videos in the “Music” category that have at least 100000 likes and at least 5000 comments
-- ```sql
-  (SELECT v.title, vs.likes, vs.commentCount
-   FROM Video v JOIN VideoStats vs ON v.videoID = vs.videoID
-   WHERE v.categoryID = 17 AND vs.likes >= 50000 AND vs.commentCount >= 1000
-   LIMIT 10)
-  UNION
-  (SELECT v.title, vs.likes, vs.commentCount
-   FROM Video v JOIN VideoStats vs ON v.videoID = vs.videoID
-   WHERE v.categoryID = 10 AND vs.likes >= 100000 AND vs.commentCount >= 5000
-   LIMIT 10);
-  ```
+```sql
+(SELECT v.title, vs.likes, vs.commentCount
+ FROM Video v JOIN VideoStats vs ON v.videoID = vs.videoID
+ WHERE v.categoryID = 17 AND vs.likes >= 50000 AND vs.commentCount >= 1000
+ LIMIT 10)
+UNION
+(SELECT v.title, vs.likes, vs.commentCount
+ FROM Video v JOIN VideoStats vs ON v.videoID = vs.videoID
+ WHERE v.categoryID = 10 AND vs.likes >= 100000 AND vs.commentCount >= 5000
+ LIMIT 10);
+```
 <img width="949" alt="Screenshot 2024-04-08 at 6 48 23 AM" src="https://github.com/cs411-alawini/sp24-cs411-team110-wakeup/assets/109453350/2b7758b9-84d4-4277-9d8e-c80e5c9716e0">
 
 
