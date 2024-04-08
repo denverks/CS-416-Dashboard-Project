@@ -212,7 +212,7 @@ Creating an index for `viewCount` did not change the cost of anything. However, 
 
 Attempt 2: `CREATE INDEX dislikes_idx ON VideoStats(dislikes);`
 <img width="1470" alt="Screenshot 2024-04-08 at 7 48 34 AM" src="https://github.com/cs411-alawini/sp24-cs411-team110-wakeup/assets/109453350/ab857933-35fc-4bb3-84c4-4681ae877eeb">
-Creating an index for `dislikes` also resulted in the same difference. The cost of the first nested loop inner join is still the same, at 787.15. However, if one were to look closely, this is more efficient than in the first attempt because the number of rows is now 189, which is higher, once again. As mentioned already, everything else stays the same.
+Creating an index for `dislikes` also resulted in the same difference. The cost of the first nested loop inner join is still the same, at 787.15. However, if one were to look closely, this is more efficient than in the first attempt because the number of rows is now 199, which is higher, once again. As mentioned already, everything else stays the same.
 
 Attempt 3: `CREATE INDEX viewCount_dislikes_idx ON VideoStats(viewCount, dislikes);`
 <img width="1470" alt="Screenshot 2024-04-08 at 7 50 13 AM" src="https://github.com/cs411-alawini/sp24-cs411-team110-wakeup/assets/109453350/621411b3-5dac-4fa1-9194-e4c8c647b610">
