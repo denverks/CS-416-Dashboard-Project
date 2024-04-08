@@ -1,6 +1,6 @@
 # Database Implementation
 
-## Connecting to GCP
+### Connecting to GCP
 
 ```sql
 CREATE TABLE Channel (
