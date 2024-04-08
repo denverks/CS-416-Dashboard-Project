@@ -164,107 +164,77 @@ LIMIT 15;
 ### Query 1
 Analysis before indexing:
 <img width="1464" alt="Screenshot 2024-04-08 at 7 08 06 AM" src="https://github.com/cs411-alawini/sp24-cs411-team110-wakeup/assets/109453350/4893e79d-d406-45e3-b9e6-347510c78ec4">
-
-
+There is a relatively high cost of 102.90 for the table scan on `c`, which references the `Channel` table. 1014 rows were searched. As for the nested loop inner join, the cost is extremely high, with a value of 3033.54. This is because there is a huge amount of rows to look through, which is 8373. Moreover, the index lookup on `v`, which references the `Video` table, costs 2.07. This is possible due to a small number of rows, which is 8.
 
 Attempt 1: `CREATE INDEX channelID_idx ON Video(channelID);`
 <img width="1461" alt="Screenshot 2024-04-08 at 7 16 12 AM" src="https://github.com/cs411-alawini/sp24-cs411-team110-wakeup/assets/109453350/d00e40e2-ca9c-44ec-89e8-994a86f7964f">
-
-
-
+Creating an index on `channelID` did not change the cost of anything.  This is likely because the cardinality of it is equal to the original index for `channelID`. The costs for the nested loop inner join, table scan on `c`, and the index lookup on `v` all remain the same respectively.
 
 Attempt 2: `CREATE INDEX title_idx ON Video(title);`
 <img width="1455" alt="Screenshot 2024-04-08 at 7 20 05 AM" src="https://github.com/cs411-alawini/sp24-cs411-team110-wakeup/assets/109453350/35d7fcba-94aa-488b-ac37-1175d8f84288">
-
-
-
-
+Just like in the first attempt, creating an index on `title` did not change the cost of anything. This is likely because the cardinality of it is too low to affect any other operation. The costs for the nested loop inner join, table scan on `c`, and the index lookup on `v` all remain the same respectively.
 
 Attempt 3: `CREATE INDEX channel_title_idx ON Video(channelID, title);`
 <img width="1470" alt="Screenshot 2024-04-08 at 7 21 28 AM" src="https://github.com/cs411-alawini/sp24-cs411-team110-wakeup/assets/109453350/bfad6b6b-7dd7-4561-9e3c-9c3ba53d5d79">
+Just like in the first and second attempt, creating a single index on both `channelID` and `title` together did not change the cost of anything. This is plausible because in the first two attempts in which an index was added for each of them did not change the cost of anything. Therefore, the costs for the nested loop inner join, table scan on `c`, and the index lookup on `v` all remain the same respectively.
 
 
-
+**Final index design**: Because all three attempts yield the same results, the original version before any indexing is the final index design for this query.
 
 
 ### Query 2
 Analysis before indexing:
 <img width="1460" alt="Screenshot 2024-04-08 at 7 25 15 AM" src="https://github.com/cs411-alawini/sp24-cs411-team110-wakeup/assets/109453350/041499cc-7d4d-424d-bf4d-a6f04cc921b5">
-
-
-
+The second query shows similar statistics to those from the first query. One big difference is that this time there are two nested inner loop joins made. There is a relatively high cost of 102.90 for the table scan on `ch`, which references the `Channel` table. 1014 rows were searched. The first nested loop inner join costs 5964.18, which is very high. As for the second nested loop inner join, the cost is noticeably lower, with a value of 3033.54. This is because there is a huge amount of rows to look through in both cases, which is 8373. Moreover, the index lookup on `v`, which references the `Video` table, costs 2.07. This is possible due to a small number of rows, which is 8.
 
 Attempt 1: `CREATE INDEX channelID_idx ON Video(channelID);`
 <img width="1467" alt="Screenshot 2024-04-08 at 7 27 06 AM" src="https://github.com/cs411-alawini/sp24-cs411-team110-wakeup/assets/109453350/65d81b68-fa72-479d-bc86-6b98777665ad">
-
-
-
-
+Creating an index on `channelID` did not change the cost of anything. This is likely because the cardinality of it is too low to affect any other operation. The costs for the two nested loop inner joins, table scan on `ch`, and the index lookup on `v` all remain the same respectively.
 
 Attempt 2: `CREATE INDEX categoryID_idx ON Video(CategoryID);`
 <img width="1468" alt="Screenshot 2024-04-08 at 7 29 16 AM" src="https://github.com/cs411-alawini/sp24-cs411-team110-wakeup/assets/109453350/caefbff0-b083-4503-a17e-244501e25288">
-
-
-
-
-
-
+Just like in the first attempt, creating an index on `categoryID` did not change the cost of anything. This is likely because the cardinality of it is too low to affect any other operation. The costs for the two nested loop inner joins, table scan on `ch`, and the index lookup on `v` all remain the same respectively.
 
 Attempt 3: `CREATE INDEX channel_category_idx ON Video(channelID, categoryID);`
 <img width="1458" alt="Screenshot 2024-04-08 at 7 39 36 AM" src="https://github.com/cs411-alawini/sp24-cs411-team110-wakeup/assets/109453350/b2d7bd93-ae30-48ea-bd76-ccb84b75dbf2">
+Just like in the first and second attempt, creating a single index on both `channelID` and `categoryID` together did not change the cost of anything. This is plausible because in the first two attempts in which an index was added for each of them did not change the cost of anything. Therefore, the costs for the two nested loop inner joins, table scan on `ch`, and the index lookup on `v` all remain the same respectively.
 
-
-
+**Final index design**: Because all three attempts yield the same results, the original version before any indexing is the final index design for this query.
 
 ### Query 3
 Analysis before indexing:
 <img width="1458" alt="Screenshot 2024-04-08 at 7 45 10 AM" src="https://github.com/cs411-alawini/sp24-cs411-team110-wakeup/assets/109453350/981643c7-9450-4660-8d00-c321be7ebeee">
-
-
-
+In the third query, because there is a subquery involved, then there are more table scans conducted. Just like in the second query, there are two nested loop inner joins. The first nested loop inner join costs 787.15, which is reasonable. However, if one were to look closely, this is very inefficient because the number of rows is 89. Meanwhile, the cost of the second nested loop inner join is considerably lower, with a value of 506.10. This is in spite of the fact that the number of rows is significantly higher, which is 803. Moreover, the index lookup on `v`, which references the `Video` table, costs 225.05, which is far more efficient than that of the second nested loop inner join while searching through the same amount of rows.
 
 Attempt 1: `CREATE INDEX viewCount_idx ON VideoStats(viewCount);`
 <img width="1467" alt="Screenshot 2024-04-08 at 7 47 16 AM" src="https://github.com/cs411-alawini/sp24-cs411-team110-wakeup/assets/109453350/8daf51c0-dfcd-4aa7-9f8b-e11fde8ff513">
-
-
-
-
+Creating an index for `viewCount` did not change the cost of anything. However, there is one notable difference. The first nested loop inner join remains 787.15. However, if one were to look closely, this is more efficient than it was before any indexing occurred because the number of rows is now 113, which is higher. As mentioned already, everything else stays the same.
 
 Attempt 2: `CREATE INDEX dislikes_idx ON VideoStats(dislikes);`
 <img width="1470" alt="Screenshot 2024-04-08 at 7 48 34 AM" src="https://github.com/cs411-alawini/sp24-cs411-team110-wakeup/assets/109453350/ab857933-35fc-4bb3-84c4-4681ae877eeb">
-
-
-
-
-
-
+Creating an index for `dislikes` also resulted in the same difference. The first nested loop inner join is still the same, at 787.15. However, if one were to look closely, this is more efficient than in the first attempt because the number of rows is now 189, which is higher, once again. As mentioned already, everything else stays the same.
 
 Attempt 3: `CREATE INDEX viewCount_dislikes_idx ON VideoStats(viewCount, dislikes);`
 <img width="1470" alt="Screenshot 2024-04-08 at 7 50 13 AM" src="https://github.com/cs411-alawini/sp24-cs411-team110-wakeup/assets/109453350/621411b3-5dac-4fa1-9194-e4c8c647b610">
+Creating a single index for both `viewCount` and `dislikes` yields identical results as in the first attempt. The first nested loop inner join stays 787.15, with 113 rows being searched. As mentioned already, everything else stays the same.
 
-
-
-
-
+**Final index design**: Attempt 2, which is the one with `dislikes_idx`, provides the best result because more rows are searched through all else held equal.
 
 ### Query 4
 Analysis before indexing:
 <img width="1461" alt="Screenshot 2024-04-08 at 7 53 21 AM" src="https://github.com/cs411-alawini/sp24-cs411-team110-wakeup/assets/109453350/b536711e-9800-4b38-8ffc-f92df73b3661">
-
-
-
+In the fourth query, there is a set operation involved, specifically `UNION`. This means that two queries are being checked. Since there are nested loop inner joins in both queries, then are two costs to be discussed. The first nested loop inner join costs 780.15, while looking up 157 rows. Meanwhile, the cost of the second nested loop inner join is slightly higher, with a value of 787.35. The number of rows is also slightly higher, which is 159. Moreover, the index lookup on `v`, which references the `Video` table, costs 287.55, while searching through an enormous 1428 rows.
 
 Attempt 1: `CREATE INDEX likes_idx ON VideoStats(likes);`
 <img width="1465" alt="Screenshot 2024-04-08 at 7 54 40 AM" src="https://github.com/cs411-alawini/sp24-cs411-team110-wakeup/assets/109453350/31be199d-5278-4bed-af6b-2fad17be002d">
-
-
-
+Creating an index for `likes` did not change many things, except for a few observations. The first nested loop inner join is still the same, at 780.15. However, if one were to look closely, this is more efficient than in the first attempt because the number of rows is now 209, which is higher. In the second nested loop inner join, even though the cost is the same at 787.35, the number of rows is lower at 123, rendering it more inefficient. Everything else was left unchanged.
 
 Attempt 2: `CREATE INDEX commentCount_idx ON VideoStats(commentCount);`
 <img width="1470" alt="Screenshot 2024-04-08 at 7 55 59 AM" src="https://github.com/cs411-alawini/sp24-cs411-team110-wakeup/assets/109453350/dd450b71-276a-4a2b-ba9c-1113e931d31c">
-
-
+Creating an index for `commentCount` yielded similar results. The first nested loop inner join is still the same, at 780.15. However, if one were to look closely, this is more efficient than in the first attempt because the number of rows is now 209, which is higher. In the second nested loop inner join, even though the cost is the same at 787.35, the number of rows is higher at 195, making it more efficient. Everything else was left unchanged.
 
 Attempt 3: `CREATE INDEX likes_commentCount_idx ON VideoStats(likes, commentCount);`
 <img width="1469" alt="Screenshot 2024-04-08 at 7 57 14 AM" src="https://github.com/cs411-alawini/sp24-cs411-team110-wakeup/assets/109453350/72da8bfe-9547-4bdd-be0c-91eff5a75d56">
+Creating a single index for both `likes` and `commentCount` yields identical results as in the first attempt. The first nested loop inner join stays 780.15, with 209 rows being searched. The second nested loop inner join stays 787.35 at 123 rows. As mentioned already, everything else stays the same.
 
+**Final index design**: Attempt 2, which is the one with `commentCount_idx`, provides the best result because more rows are searched through all else held equal.
