@@ -176,7 +176,7 @@ Just like in the first attempt, creating an index on `title` did not change the 
 
 Attempt 3: `CREATE INDEX channel_title_idx ON Video(channelID, title);`
 <img width="1470" alt="Screenshot 2024-04-08 at 7 21 28 AM" src="https://github.com/cs411-alawini/sp24-cs411-team110-wakeup/assets/109453350/bfad6b6b-7dd7-4561-9e3c-9c3ba53d5d79">
-Just like in the first and second attempt, creating a single index on both `channelID` and `title` together did not change the cost of anything. This is plausible because in the first two attempts in which an index was added for each of them did not change the cost of anything. Therefore, the costs for the nested loop inner join, table scan on `c`, and the index lookup on `v` all remain the same respectively.
+Just like in the first and second attempt, creating a single index on both `channelID` and `title` together did not change the cost of anything. This is plausible because the first two attempts in which an index was added for each of them did not change the cost of anything. Therefore, the costs for the nested loop inner join, table scan on `c`, and the index lookup on `v` all remain the same respectively.
 
 
 **Final index design**: Because all three attempts yield the same results, the original version before any indexing is the final index design for this query.
@@ -197,7 +197,7 @@ Just like in the first attempt, creating an index on `categoryID` did not change
 
 Attempt 3: `CREATE INDEX channel_category_idx ON Video(channelID, categoryID);`
 <img width="1458" alt="Screenshot 2024-04-08 at 7 39 36 AM" src="https://github.com/cs411-alawini/sp24-cs411-team110-wakeup/assets/109453350/b2d7bd93-ae30-48ea-bd76-ccb84b75dbf2">
-Just like in the first and second attempt, creating a single index on both `channelID` and `categoryID` together did not change the cost of anything. This is plausible because in the first two attempts in which an index was added for each of them did not change the cost of anything. Therefore, the costs for the two nested loop inner joins, table scan on `ch`, and the index lookup on `v` all remain the same respectively.
+Just like in the first and second attempt, creating a single index on both `channelID` and `categoryID` together did not change the cost of anything. This is plausible because the first two attempts in which an index was added for each of them did not change the cost of anything. Therefore, the costs for the two nested loop inner joins, table scan on `ch`, and the index lookup on `v` all remain the same respectively.
 
 **Final index design**: Because all three attempts yield the same results, the original version before any indexing is the final index design for this query.
 
