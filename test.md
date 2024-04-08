@@ -1,5 +1,7 @@
 # Database Implementation
 
+## Connecting to GCP
+
 ```sql
 CREATE TABLE Channel (
 channelID VARCHAR(255),
