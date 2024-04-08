@@ -208,15 +208,15 @@ In the third query, because there is a subquery involved, then there are more ta
 
 Attempt 1: `CREATE INDEX viewCount_idx ON VideoStats(viewCount);`
 <img width="1467" alt="Screenshot 2024-04-08 at 7 47 16 AM" src="https://github.com/cs411-alawini/sp24-cs411-team110-wakeup/assets/109453350/8daf51c0-dfcd-4aa7-9f8b-e11fde8ff513">
-Creating an index for `viewCount` did not change the cost of anything. However, there is one notable difference. The first nested loop inner join remains 787.15. However, if one were to look closely, this is more efficient than it was before any indexing occurred because the number of rows is now 113, which is higher. As mentioned already, everything else stays the same.
+Creating an index for `viewCount` did not change the cost of anything. However, there is one notable difference. The cost of the first nested loop inner join remains 787.15. However, if one were to look closely, this is more efficient than it was before any indexing occurred because the number of rows is now 113, which is higher. As mentioned already, everything else stays the same.
 
 Attempt 2: `CREATE INDEX dislikes_idx ON VideoStats(dislikes);`
 <img width="1470" alt="Screenshot 2024-04-08 at 7 48 34 AM" src="https://github.com/cs411-alawini/sp24-cs411-team110-wakeup/assets/109453350/ab857933-35fc-4bb3-84c4-4681ae877eeb">
-Creating an index for `dislikes` also resulted in the same difference. The first nested loop inner join is still the same, at 787.15. However, if one were to look closely, this is more efficient than in the first attempt because the number of rows is now 189, which is higher, once again. As mentioned already, everything else stays the same.
+Creating an index for `dislikes` also resulted in the same difference. The cost of the first nested loop inner join is still the same, at 787.15. However, if one were to look closely, this is more efficient than in the first attempt because the number of rows is now 189, which is higher, once again. As mentioned already, everything else stays the same.
 
 Attempt 3: `CREATE INDEX viewCount_dislikes_idx ON VideoStats(viewCount, dislikes);`
 <img width="1470" alt="Screenshot 2024-04-08 at 7 50 13 AM" src="https://github.com/cs411-alawini/sp24-cs411-team110-wakeup/assets/109453350/621411b3-5dac-4fa1-9194-e4c8c647b610">
-Creating a single index for both `viewCount` and `dislikes` yields identical results as in the first attempt. The first nested loop inner join stays 787.15, with 113 rows being searched. As mentioned already, everything else stays the same.
+Creating a single index for both `viewCount` and `dislikes` yields identical results as in the first attempt. The cost of the first nested loop inner join stays 787.15, with 113 rows being searched. As mentioned already, everything else stays the same.
 
 **Final index design**: Attempt 2, which is the one with `dislikes_idx`, provides the best result because more rows are searched through all else held equal.
 
@@ -227,14 +227,14 @@ In the fourth query, there is a set operation involved, specifically `UNION`. Th
 
 Attempt 1: `CREATE INDEX likes_idx ON VideoStats(likes);`
 <img width="1465" alt="Screenshot 2024-04-08 at 7 54 40 AM" src="https://github.com/cs411-alawini/sp24-cs411-team110-wakeup/assets/109453350/31be199d-5278-4bed-af6b-2fad17be002d">
-Creating an index for `likes` did not change many things, except for a few observations. The first nested loop inner join is still the same, at 780.15. However, if one were to look closely, this is more efficient than in the first attempt because the number of rows is now 209, which is higher. In the second nested loop inner join, even though the cost is the same at 787.35, the number of rows is lower at 123, rendering it more inefficient. Everything else was left unchanged.
+Creating an index for `likes` did not change many things, except for a few observations. The cost of the first nested loop inner join is still the same, at 780.15. However, if one were to look closely, this is more efficient than in the first attempt because the number of rows is now 209, which is higher. In the second nested loop inner join, even though the cost is the same at 787.35, the number of rows is lower at 123, rendering it more inefficient. Everything else was left unchanged.
 
 Attempt 2: `CREATE INDEX commentCount_idx ON VideoStats(commentCount);`
 <img width="1470" alt="Screenshot 2024-04-08 at 7 55 59 AM" src="https://github.com/cs411-alawini/sp24-cs411-team110-wakeup/assets/109453350/dd450b71-276a-4a2b-ba9c-1113e931d31c">
-Creating an index for `commentCount` yielded similar results. The first nested loop inner join is still the same, at 780.15. However, if one were to look closely, this is more efficient than in the first attempt because the number of rows is now 209, which is higher. In the second nested loop inner join, even though the cost is the same at 787.35, the number of rows is higher at 195, making it more efficient. Everything else was left unchanged.
+Creating an index for `commentCount` yielded similar results. The cost of the first nested loop inner join is still the same, at 780.15. However, if one were to look closely, this is more efficient than in the first attempt because the number of rows is now 209, which is higher. In the second nested loop inner join, even though the cost is the same at 787.35, the number of rows is higher at 195, making it more efficient. Everything else was left unchanged.
 
 Attempt 3: `CREATE INDEX likes_commentCount_idx ON VideoStats(likes, commentCount);`
 <img width="1469" alt="Screenshot 2024-04-08 at 7 57 14 AM" src="https://github.com/cs411-alawini/sp24-cs411-team110-wakeup/assets/109453350/72da8bfe-9547-4bdd-be0c-91eff5a75d56">
-Creating a single index for both `likes` and `commentCount` yields identical results as in the first attempt. The first nested loop inner join stays 780.15, with 209 rows being searched. The second nested loop inner join stays 787.35 at 123 rows. As mentioned already, everything else stays the same.
+Creating a single index for both `likes` and `commentCount` yields identical results as in the first attempt. The cost of the first nested loop inner join stays 780.15, with 209 rows being searched. The second nested loop inner join stays 787.35 at 123 rows. As mentioned already, everything else stays the same.
 
 **Final index design**: Attempt 2, which is the one with `commentCount_idx`, provides the best result because more rows are searched through all else held equal.
