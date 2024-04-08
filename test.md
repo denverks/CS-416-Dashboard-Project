@@ -180,7 +180,7 @@ Attempt 2: `CREATE INDEX title_idx ON Video(title);`
 
 
 
-Attempt 3: `CREATE INDEX channel_title_idx ON Video(channelID, title);` MAY WANNA CHANGE THIS LATER
+Attempt 3: `CREATE INDEX channel_title_idx ON Video(channelID, title);`
 <img width="1470" alt="Screenshot 2024-04-08 at 7 21 28 AM" src="https://github.com/cs411-alawini/sp24-cs411-team110-wakeup/assets/109453350/bfad6b6b-7dd7-4561-9e3c-9c3ba53d5d79">
 
 
